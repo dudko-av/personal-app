@@ -7,3 +7,5 @@
 /// <reference path="typescript/typescript.d.ts" />
 /// <reference path="mongoose/mongoose.d.ts" />
 /// <reference path="systemjs/systemjs.d.ts" />
+/// <reference path="socket.io/socket.io.d.ts" />
+/// <reference path="body-parser/body-parser.d.ts" />

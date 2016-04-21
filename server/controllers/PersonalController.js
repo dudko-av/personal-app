@@ -2,8 +2,9 @@
 "use strict";
 var PersonalModel_1 = require('../models/PersonalModel');
 var PersonalController = (function () {
-    function PersonalController() {
+    function PersonalController(io) {
         this.actions = [];
+        this._io = io;
         this.actions.push('income');
         this.actions.push('create');
         this.actions.push('history');
@@ -12,7 +13,9 @@ var PersonalController = (function () {
         res.send('income action test');
     };
     PersonalController.prototype.createAction = function (req, res) {
+        var _this = this;
         (new PersonalModel_1.PersonalModel(req.body)).save(function (err, model) {
+            _this._io.emit('NEW_RECORD', model);
             res.send(err || model);
         });
     };

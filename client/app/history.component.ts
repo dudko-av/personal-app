@@ -2,6 +2,7 @@ import {Component, OnInit} from 'angular2/core';
 import 'rxjs/Rx';
 
 import {HistoryService} from './history.service';
+import {SocketService} from './socket.service';
 
 @Component({
     selector: 'history-component',
@@ -25,16 +26,20 @@ import {HistoryService} from './history.service';
             </div>
         </div>
     `,
-    providers: [HistoryService]
+    providers: []
 })
 export class HistoryComponent {
-    history;
+    history:[];
 
-    constructor(private _historyService:HistoryService) {}
+    constructor(private _historyService:HistoryService, private _socketService:SocketService) {}
 
     ngOnInit() {
         this._historyService
             .getHistory()
             .subscribe(list => this.history = list);
+
+        this._socketService.on('NEW_RECORD', record => {
+            this.history.unshift(record);
+        });
     }
 }

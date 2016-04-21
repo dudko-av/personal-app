@@ -2,6 +2,7 @@ import {Component} from 'angular2/core';
 
 import {HistoryService} from './history.service';
 import {HistoryComponent} from './history.component';
+import {SocketService} from './socket.service';
 
 @Component({
     selector: 'my-app',
@@ -29,7 +30,10 @@ import {HistoryComponent} from './history.component';
         <history-component></history-component>
     `,
     directives: [HistoryComponent],
-    providers: [HistoryService]
+    providers: [
+        HistoryService,
+        SocketService
+    ]
 })
 
 export class AppComponent {
@@ -47,7 +51,9 @@ export class AppComponent {
         'Прочее'
     ];
 
-    constructor(private _historyService:HistoryService) {}
+    constructor(private _historyService:HistoryService, private _socketService:SocketService) {
+        _socketService.connect();
+    }
 
     addRecord(record) {
         this._historyService
