@@ -10,6 +10,13 @@ import {HistoryComponent} from './history.component';
             <div class="form-group">
                 <label>Comment</label>
                 <input type="text" class="form-control" [(ngModel)]="record.comment" />
+            </div>            
+            <div style="margin-bottom: 15px;">
+                <button *ngFor="#opt of options" 
+                        type="button" 
+                        style="margin-bottom: 7px; margin-right: 7px;"
+                        class="btn btn-default btn-sm" 
+                        (click)="record.comment = opt">{{opt}}</button>
             </div>
             <div class="form-group">
                 <label>Volume</label>
@@ -30,6 +37,15 @@ export class AppComponent {
         comment: '',
         volume: ''
     };
+
+    options = [
+        'Продукты',
+        'Проезд',
+        'Квартира',
+        'Отдых',
+        'Одежда',
+        'Прочее'
+    ];
 
     constructor(private _historyService:HistoryService) {}
 
