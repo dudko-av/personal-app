@@ -1,6 +1,6 @@
 "use strict";
 exports.production = {
-    db: process.env.OPENSHIFT_MONGODB_DB_URL + 'kickerapp',
+    db: process.env.OPENSHIFT_MONGODB_DB_URL + 'personalapp',
     ip: process.env.OPENSHIFT_NODEJS_IP,
     port: process.env.OPENSHIFT_NODEJS_PORT,
     sessionSecret: 'devSessionSecret',
