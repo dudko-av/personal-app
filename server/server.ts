@@ -4,6 +4,7 @@
 import * as express from 'express';
 import * as fs from 'fs';
 import * as bodyParser from 'body-parser';
+import * as http from 'http';
 
 import {config} from './config/config';
 import {DB} from './config/mongoose';
@@ -26,6 +27,11 @@ fs.readdirSync('server/controllers')
         });
     });
 
-app.listen(config.ip, config.port, function () {
-    console.log('Server listening on port ' + config.port);
+// app.listen(config.ip, config.port, function () {
+//     console.log('Server listening on port ' + config.port);
+// });
+var server = http.Server(app);
+
+server.listen(config.port, config.ip, function () {
+    console.log('Server running at ' + config.port);
 });

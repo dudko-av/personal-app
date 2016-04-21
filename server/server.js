@@ -4,6 +4,7 @@
 var express = require('express');
 var fs = require('fs');
 var bodyParser = require('body-parser');
+var http = require('http');
 var config_1 = require('./config/config');
 var mongoose_1 = require('./config/mongoose');
 var app = express();
@@ -21,7 +22,11 @@ fs.readdirSync('server/controllers')
         app.use('/' + ctrlName + '/' + a, ctrl[a + 'Action']);
     });
 });
-app.listen(config_1.config.ip, config_1.config.port, function () {
-    console.log('Server listening on port ' + config_1.config.port);
+// app.listen(config.ip, config.port, function () {
+//     console.log('Server listening on port ' + config.port);
+// });
+var server = http.Server(app);
+server.listen(config_1.config.port, config_1.config.ip, function () {
+    console.log('Server running at ' + config_1.config.port);
 });
 //# sourceMappingURL=server.js.map
