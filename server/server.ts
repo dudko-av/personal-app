@@ -26,6 +26,6 @@ fs.readdirSync('server/controllers')
         });
     });
 
-app.listen(config.port, function () {
+app.listen(config.ip, config.port, function () {
     console.log('Server listening on port ' + config.port);
 });
