@@ -1,9 +1,19 @@
+/// <reference path='../typings/tsd.d.ts' />
 /// <reference path="../typings/express/express.d.ts" />
 
 import * as express from 'express';
 import * as fs from 'fs';
+import * as bodyParser from 'body-parser';
+
+import {config} from './config/config';
+import {DB} from './config/mongoose';
 
 var app = express();
+var db = new DB();
+
+// configure app
+app.use(express.static('client'));
+app.use(bodyParser.json());
 
 // load controllers
 fs.readdirSync('server/controllers')
@@ -16,8 +26,6 @@ fs.readdirSync('server/controllers')
         });
     });
 
-app.use(express.static('client'));
-
-app.listen(3333, function () {
-    console.log('Server listening on port 3333.');
+app.listen(config.port, function () {
+    console.log('Server listening on port ' + config.port);
 });

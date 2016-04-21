@@ -1,8 +1,16 @@
+/// <reference path='../typings/tsd.d.ts' />
 /// <reference path="../typings/express/express.d.ts" />
 "use strict";
 var express = require('express');
 var fs = require('fs');
+var bodyParser = require('body-parser');
+var config_1 = require('./config/config');
+var mongoose_1 = require('./config/mongoose');
 var app = express();
+var db = new mongoose_1.DB();
+// configure app
+app.use(express.static('client'));
+app.use(bodyParser.json());
 // load controllers
 fs.readdirSync('server/controllers')
     .filter(function (f) { return !!f.match(/\.js$/); })
@@ -13,8 +21,7 @@ fs.readdirSync('server/controllers')
         app.use('/' + ctrlName + '/' + a, ctrl[a + 'Action']);
     });
 });
-app.use(express.static('client'));
-app.listen(3333, function () {
-    console.log('Server listening on port 3333.');
+app.listen(config_1.config.port, function () {
+    console.log('Server listening on port ' + config_1.config.port);
 });
 //# sourceMappingURL=server.js.map
