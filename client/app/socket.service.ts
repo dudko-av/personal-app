@@ -1,7 +1,4 @@
 import {Injectable} from 'angular2/core';
-import {Http, Response, Headers} from 'angular2/http';
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/Rx';
 
 @Injectable()
 export class SocketService {
@@ -10,10 +7,11 @@ export class SocketService {
 
     constructor() {
         this._io = io;
+        this._socket = this._io.connect();
     }
 
     connect() {
-        this._socket = this._io.connect();
+        this._socket = this._socket || this._io.connect();
     }
 
     on(name, callback) {

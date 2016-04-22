@@ -8,6 +8,7 @@ var PersonalController = (function () {
         this.actions.push('income');
         this.actions.push('create');
         this.actions.push('history');
+        this.actions.push('options');
     }
     PersonalController.prototype.incomeAction = function (req, res) {
         res.send('income action test');
@@ -21,6 +22,11 @@ var PersonalController = (function () {
     };
     PersonalController.prototype.historyAction = function (req, res) {
         PersonalModel_1.PersonalModel.find(null, null, { sort: { 'createdAt': 'desc' } }, function (err, list) {
+            res.send(list);
+        });
+    };
+    PersonalController.prototype.optionsAction = function (req, res) {
+        PersonalModel_1.PersonalModel.find(null).distinct('comment', function (err, list) {
             res.send(list);
         });
     };

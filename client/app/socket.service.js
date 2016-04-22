@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'rxjs/Rx'], function(exports_1, context_1) {
+System.register(['angular2/core'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -16,15 +16,15 @@ System.register(['angular2/core', 'rxjs/Rx'], function(exports_1, context_1) {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
-            },
-            function (_1) {}],
+            }],
         execute: function() {
             SocketService = (function () {
                 function SocketService() {
                     this._io = io;
+                    this._socket = this._io.connect();
                 }
                 SocketService.prototype.connect = function () {
-                    this._socket = this._io.connect();
+                    this._socket = this._socket || this._io.connect();
                 };
                 SocketService.prototype.on = function (name, callback) {
                     this._socket.on(name, callback);

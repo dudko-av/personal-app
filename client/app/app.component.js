@@ -28,9 +28,8 @@ System.register(['angular2/core', './history.service', './history.component', '.
             }],
         execute: function() {
             AppComponent = (function () {
-                function AppComponent(_historyService, _socketService) {
+                function AppComponent(_historyService) {
                     this._historyService = _historyService;
-                    this._socketService = _socketService;
                     this.record = {
                         comment: '',
                         volume: ''
@@ -43,8 +42,13 @@ System.register(['angular2/core', './history.service', './history.component', '.
                         'Одежда',
                         'Прочее'
                     ];
-                    _socketService.connect();
                 }
+                AppComponent.prototype.ngOnInit = function () {
+                    var _this = this;
+                    this._historyService.getOptions().subscribe(function (opts) {
+                        _this.options = opts;
+                    });
+                };
                 AppComponent.prototype.addRecord = function (record) {
                     this._historyService
                         .create(record)
@@ -62,7 +66,7 @@ System.register(['angular2/core', './history.service', './history.component', '.
                             socket_service_1.SocketService
                         ]
                     }), 
-                    __metadata('design:paramtypes', [history_service_1.HistoryService, socket_service_1.SocketService])
+                    __metadata('design:paramtypes', [history_service_1.HistoryService])
                 ], AppComponent);
                 return AppComponent;
             }());

@@ -1,4 +1,4 @@
-import {Component} from 'angular2/core';
+import {Component, OnInit} from 'angular2/core';
 
 import {HistoryService} from './history.service';
 import {HistoryComponent} from './history.component';
@@ -36,12 +36,11 @@ import {SocketService} from './socket.service';
     ]
 })
 
-export class AppComponent {
+export class AppComponent implements OnInit {
     record = {
         comment: '',
         volume: ''
     };
-
     options = [
         'Продукты',
         'Проезд',
@@ -51,14 +50,19 @@ export class AppComponent {
         'Прочее'
     ];
 
-    constructor(private _historyService:HistoryService, private _socketService:SocketService) {
-        _socketService.connect();
+    constructor(private _historyService:HistoryService) {
+    }
+
+    ngOnInit() {
+        this._historyService.getOptions().subscribe(opts => {
+            this.options = opts;
+        });
     }
 
     addRecord(record) {
         this._historyService
             .create(record)
-            .subscribe(function (res) {
+            .subscribe(res => {
                 var t = res;
             });
     }

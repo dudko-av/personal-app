@@ -14,6 +14,7 @@ export class PersonalController {
         this.actions.push('income');
         this.actions.push('create');
         this.actions.push('history');
+        this.actions.push('options');
     }
 
     incomeAction(req:express.Request, res:express.Response) {
@@ -29,6 +30,12 @@ export class PersonalController {
 
     historyAction(req:express.Request, res:express.Response) {
         PersonalModel.find(null, null, {sort: {'createdAt': 'desc'}}, function (err, list) {
+            res.send(list);
+        });
+    }
+
+    optionsAction(req:express.Request, res:express.Response) {
+        PersonalModel.find(null).distinct('comment', (err, list) => {
             res.send(list);
         });
     }
