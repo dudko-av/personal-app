@@ -7,18 +7,27 @@ import * as fs from 'fs';
 import * as bodyParser from 'body-parser';
 import * as http from 'http';
 import * as socket from 'socket.io';
+import * as session from 'express-session';
 
 import {config} from './config/config';
 import {DB} from './config/mongoose';
+import {Passport} from './config/passport';
 
 var app = express();
 var server = http.Server(app);
 var io = socket(server);
+var passport = new Passport();
 
 var db = new DB();
 // configure app
 app.use(express.static('client'));
+app.use('/@angular2-material', function (req, res, next) {
+    res.sendfile('./client/node_modules' + req.originalUrl);
+});
 app.use(bodyParser.json());
+app.use(session({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
+app.use(Passport.origin.initialize());
+app.use(Passport.origin.session());
 
 // load controllers
 fs.readdirSync('server/controllers')
@@ -28,11 +37,16 @@ fs.readdirSync('server/controllers')
         var ctrl = require('./controllers/' + name)[name.split('.')[0]];
         ctrl = new ctrl(io);
         ctrl.actions.forEach(a => {
-            app.use('/' + ctrlName + '/' + a, function (req, res) {
-                ctrl[a + 'Action'](req, res);
+            app.use('/' + ctrlName + '/' + a, function (req, res, next) {
+                ctrl[a + 'Action'](req, res, next);
             });
         });
     });
+
+// not found
+app.use(function (req, res, next) {
+    res.sendfile('./client/index.html');
+});
 
 // logs
 io.on('connection', function (client) {

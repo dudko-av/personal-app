@@ -15,20 +15,32 @@ var PersonalController = (function () {
     };
     PersonalController.prototype.createAction = function (req, res) {
         var _this = this;
+        if (!this.authorized(req, res))
+            return;
+        req.body.createdBy = req.user;
         (new PersonalModel_1.PersonalModel(req.body)).save(function (err, model) {
             _this._io.emit('NEW_RECORD', model);
             res.send(err || model);
         });
     };
     PersonalController.prototype.historyAction = function (req, res) {
-        PersonalModel_1.PersonalModel.find(null, null, { sort: { 'createdAt': 'desc' } }, function (err, list) {
+        if (!this.authorized(req, res))
+            return;
+        PersonalModel_1.PersonalModel.find({ createdBy: req.user._id }, null, { sort: { 'createdAt': 'desc' } }, function (err, list) {
             res.send(list);
         });
     };
     PersonalController.prototype.optionsAction = function (req, res) {
-        PersonalModel_1.PersonalModel.find(null).distinct('comment', function (err, list) {
+        if (!this.authorized(req, res))
+            return;
+        PersonalModel_1.PersonalModel.find({ createdBy: req.user._id }).distinct('comment', function (err, list) {
             res.send(list);
         });
+    };
+    PersonalController.prototype.authorized = function (req, res) {
+        if (!req.user)
+            res.sendStatus(401);
+        return req.user ? true : false;
     };
     return PersonalController;
 }());

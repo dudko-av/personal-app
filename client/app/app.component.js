@@ -1,4 +1,4 @@
-System.register(['angular2/core', './history.service', './history.component', './socket.service'], function(exports_1, context_1) {
+System.register(['angular2/core', 'angular2/router', '@angular2-material/button', '@angular2-material/input', './components/history/history.component', './components/login/login.component'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,63 +10,59 @@ System.register(['angular2/core', './history.service', './history.component', '.
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, history_service_1, history_component_1, socket_service_1;
+    var core_1, router_1, button_1, input_1, history_component_1, login_component_1;
     var AppComponent;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
             },
-            function (history_service_1_1) {
-                history_service_1 = history_service_1_1;
+            function (router_1_1) {
+                router_1 = router_1_1;
+            },
+            function (button_1_1) {
+                button_1 = button_1_1;
+            },
+            function (input_1_1) {
+                input_1 = input_1_1;
             },
             function (history_component_1_1) {
                 history_component_1 = history_component_1_1;
             },
-            function (socket_service_1_1) {
-                socket_service_1 = socket_service_1_1;
+            function (login_component_1_1) {
+                login_component_1 = login_component_1_1;
             }],
         execute: function() {
             AppComponent = (function () {
-                function AppComponent(_historyService) {
-                    this._historyService = _historyService;
-                    this.record = {
-                        comment: '',
-                        volume: ''
-                    };
-                    this.options = [
-                        'Продукты',
-                        'Проезд',
-                        'Квартира',
-                        'Отдых',
-                        'Одежда',
-                        'Прочее'
-                    ];
+                function AppComponent() {
                 }
-                AppComponent.prototype.ngOnInit = function () {
-                    var _this = this;
-                    this._historyService.getOptions().subscribe(function (opts) {
-                        _this.options = opts;
-                    });
-                };
-                AppComponent.prototype.addRecord = function (record) {
-                    this._historyService
-                        .create(record)
-                        .subscribe(function (res) {
-                        var t = res;
-                    });
-                };
                 AppComponent = __decorate([
                     core_1.Component({
                         selector: 'my-app',
-                        template: "\n        <form style=\"margin-bottom: 15px;\">\n            <div class=\"form-group\">\n                <label>Comment</label>\n                <input type=\"text\" class=\"form-control\" [(ngModel)]=\"record.comment\" />\n            </div>            \n            <div style=\"margin-bottom: 15px;\">\n                <button *ngFor=\"#opt of options\" \n                        type=\"button\" \n                        style=\"margin-bottom: 7px; margin-right: 7px;\"\n                        class=\"btn btn-default btn-sm\" \n                        (click)=\"record.comment = opt\">{{opt}}</button>\n            </div>\n            <div class=\"form-group\">\n                <label>Volume</label>\n                <input type=\"text\" class=\"form-control\" [(ngModel)]=\"record.volume\" />\n            </div>\n\n            <button type=\"button\" class=\"btn btn-primary\" (click)=\"addRecord(record)\">ADD</button>\n        </form>\n\n        <history-component></history-component>\n    ",
-                        directives: [history_component_1.HistoryComponent],
+                        templateUrl: 'app/app.component.html',
+                        directives: [
+                            router_1.ROUTER_DIRECTIVES,
+                            button_1.MdButton,
+                            input_1.MD_INPUT_DIRECTIVES
+                        ],
                         providers: [
-                            history_service_1.HistoryService,
-                            socket_service_1.SocketService
+                            router_1.ROUTER_PROVIDERS,
                         ]
-                    }), 
-                    __metadata('design:paramtypes', [history_service_1.HistoryService])
+                    }),
+                    router_1.RouteConfig([
+                        {
+                            path: '/login',
+                            name: 'Login',
+                            component: login_component_1.LoginComponent
+                        },
+                        {
+                            path: '/history',
+                            name: 'History',
+                            component: history_component_1.HistoryComponent,
+                            useAsDefault: true
+                        }
+                    ]), 
+                    __metadata('design:paramtypes', [])
                 ], AppComponent);
                 return AppComponent;
             }());

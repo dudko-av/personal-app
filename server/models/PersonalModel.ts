@@ -1,6 +1,7 @@
 ///<reference path="../../typings/mongoose/mongoose.d.ts" />
 
 import * as mongoose from 'mongoose';
+import {Schema} from "mongoose";
 
 export interface IPersonal extends mongoose.Document {
     createdAt?:Date,
@@ -9,8 +10,9 @@ export interface IPersonal extends mongoose.Document {
     comment?:string
 }
 
-var _schema = new mongoose.Schema({
+var _schema = new Schema({
     createdAt: {type: Date, 'default': Date.now},
+    createdBy:  {'type': Schema.Types.ObjectId, ref: 'user'},
     type: {type: Number, 'default': 0},
     volume: {type: Number, 'default': 0},
     comment: {type: String, 'default': ''}

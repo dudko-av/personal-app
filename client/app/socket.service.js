@@ -1,4 +1,4 @@
-System.register(['angular2/core'], function(exports_1, context_1) {
+System.register(['rxjs/Observable', 'rxjs/Rx', 'angular2/core'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,10 +10,14 @@ System.register(['angular2/core'], function(exports_1, context_1) {
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1;
+    var Observable_1, core_1;
     var SocketService;
     return {
         setters:[
+            function (Observable_1_1) {
+                Observable_1 = Observable_1_1;
+            },
+            function (_1) {},
             function (core_1_1) {
                 core_1 = core_1_1;
             }],
@@ -28,6 +32,14 @@ System.register(['angular2/core'], function(exports_1, context_1) {
                 };
                 SocketService.prototype.on = function (name, callback) {
                     this._socket.on(name, callback);
+                };
+                SocketService.prototype.observe = function (name) {
+                    var _this = this;
+                    return new Observable_1.Observable(function (observer) {
+                        _this._socket.on(name, function (data) {
+                            observer.next(data);
+                        });
+                    });
                 };
                 SocketService = __decorate([
                     core_1.Injectable(), 

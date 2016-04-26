@@ -1,3 +1,5 @@
+import {Observable} from 'rxjs/Observable';
+import 'rxjs/Rx';
 import {Injectable} from 'angular2/core';
 
 @Injectable()
@@ -16,5 +18,13 @@ export class SocketService {
 
     on(name, callback) {
         this._socket.on(name, callback);
+    }
+
+    observe(name):Observable<any> {
+        return new Observable(observer => {
+            this._socket.on(name, data => {
+                observer.next(data);
+            });
+        });
     }
 }

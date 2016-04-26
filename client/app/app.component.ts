@@ -1,69 +1,36 @@
-import {Component, OnInit} from 'angular2/core';
-
-import {HistoryService} from './history.service';
-import {HistoryComponent} from './history.component';
-import {SocketService} from './socket.service';
+// angular core
+import {Component} from 'angular2/core';
+import {RouteConfig, ROUTER_DIRECTIVES, ROUTER_PROVIDERS} from 'angular2/router';
+// angular2-material 
+import {MdButton} from '@angular2-material/button';
+import {MD_INPUT_DIRECTIVES} from '@angular2-material/input';
+// custom
+import {HistoryComponent} from './components/history/history.component';
+import {LoginComponent} from './components/login/login.component';
 
 @Component({
     selector: 'my-app',
-    template: `
-        <form style="margin-bottom: 15px;">
-            <div class="form-group">
-                <label>Comment</label>
-                <input type="text" class="form-control" [(ngModel)]="record.comment" />
-            </div>            
-            <div style="margin-bottom: 15px;">
-                <button *ngFor="#opt of options" 
-                        type="button" 
-                        style="margin-bottom: 7px; margin-right: 7px;"
-                        class="btn btn-default btn-sm" 
-                        (click)="record.comment = opt">{{opt}}</button>
-            </div>
-            <div class="form-group">
-                <label>Volume</label>
-                <input type="text" class="form-control" [(ngModel)]="record.volume" />
-            </div>
-
-            <button type="button" class="btn btn-primary" (click)="addRecord(record)">ADD</button>
-        </form>
-
-        <history-component></history-component>
-    `,
-    directives: [HistoryComponent],
+    templateUrl: 'app/app.component.html',
+    directives: [
+        ROUTER_DIRECTIVES,
+        MdButton,
+        MD_INPUT_DIRECTIVES
+    ],
     providers: [
-        HistoryService,
-        SocketService
+        ROUTER_PROVIDERS,
     ]
 })
-
-export class AppComponent implements OnInit {
-    record = {
-        comment: '',
-        volume: ''
-    };
-    options = [
-        'Продукты',
-        'Проезд',
-        'Квартира',
-        'Отдых',
-        'Одежда',
-        'Прочее'
-    ];
-
-    constructor(private _historyService:HistoryService) {
+@RouteConfig([
+    {
+        path: '/login',
+        name: 'Login',
+        component: LoginComponent
+    },
+    {
+        path: '/history',
+        name: 'History',
+        component: HistoryComponent,
+        useAsDefault: true
     }
-
-    ngOnInit() {
-        this._historyService.getOptions().subscribe(opts => {
-            this.options = opts;
-        });
-    }
-
-    addRecord(record) {
-        this._historyService
-            .create(record)
-            .subscribe(res => {
-                var t = res;
-            });
-    }
-}
+])
+export class AppComponent {}
