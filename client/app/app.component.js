@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'angular2/router', '@angular2-material/button', '@angular2-material/input', './components/history/history.component', './components/login/login.component'], function(exports_1, context_1) {
+System.register(['angular2/core', 'angular2/router', '@angular2-material/button', '@angular2-material/input', './components/history/history.component', './components/login/login.component', './components/dashboard/dashboard.component'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(['angular2/core', 'angular2/router', '@angular2-material/button'
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, router_1, button_1, input_1, history_component_1, login_component_1;
+    var core_1, router_1, button_1, input_1, history_component_1, login_component_1, dashboard_component_1;
     var AppComponent;
     return {
         setters:[
@@ -31,6 +31,9 @@ System.register(['angular2/core', 'angular2/router', '@angular2-material/button'
             },
             function (login_component_1_1) {
                 login_component_1 = login_component_1_1;
+            },
+            function (dashboard_component_1_1) {
+                dashboard_component_1 = dashboard_component_1_1;
             }],
         execute: function() {
             AppComponent = (function () {
@@ -56,10 +59,15 @@ System.register(['angular2/core', 'angular2/router', '@angular2-material/button'
                             component: login_component_1.LoginComponent
                         },
                         {
+                            path: '/dashboard',
+                            name: 'Dashboard',
+                            component: dashboard_component_1.DashboardComponent,
+                            useAsDefault: true
+                        },
+                        {
                             path: '/history',
                             name: 'History',
-                            component: history_component_1.HistoryComponent,
-                            useAsDefault: true
+                            component: history_component_1.HistoryComponent
                         }
                     ]), 
                     __metadata('design:paramtypes', [])

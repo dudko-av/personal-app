@@ -61,6 +61,14 @@ System.register(['angular2/core', 'rxjs/Rx', '@angular2-material/button', '@angu
                         _this.record = new Record();
                     });
                 };
+                // TODO
+                HistoryComponent.prototype.load = function (fromDate) {
+                    var _this = this;
+                    this._historyService.loadAll({ createdAt: fromDate }).subscribe(function (data) {
+                        _this.history = data;
+                        _this.calculate();
+                    });
+                };
                 HistoryComponent = __decorate([
                     core_1.Component({
                         selector: 'history-component',

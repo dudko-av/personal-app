@@ -32,7 +32,12 @@ export class PersonalController {
 
     historyAction(req:express.Request, res:express.Response) {
         if (!this.authorized(req, res)) return;
-        PersonalModel.find({createdBy: req.user._id}, null, {sort: {'createdAt': 'desc'}}, function (err, list) {
+        let filter = {};
+        filter['createdBy'] = req.user._id;
+        if (req.body.createdAt) {
+            filter['createdAt'] = {$gt: new Date(req.body.createdAt)};
+        }
+        PersonalModel.find(filter, null, {sort: {'createdAt': 'desc'}}, function (err, list) {
             res.send(list);
         });
     }

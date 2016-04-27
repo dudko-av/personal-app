@@ -16,27 +16,25 @@
     <button md-raised-button color="primary" (click)="addRecord(record)">ADD</button>
 </form>
 
-<div class="panel panel-default">
-    <div class="panel-body">
-        <table class="table table-condensed">
-            <caption class="text-right">
-                <span class="pull-left">
-                    <input type="date" class="form-control input-sm" [(ngModel)]="fromDate"/>
-                </span>
-                - {{outlay}} / + {{income}}
-            </caption>
-            <thead>
-                <th>Time</th>
-                <th>Comment</th>
-                <th>Volume</th>
-            </thead>
-            <tbody>
-                <tr *ngFor="#record of history">
-                <td>{{record.createdAt | date:'yyyy/MM/dd HH:mm'}}</td>
-                <td>{{record.comment}}</td>
-                <td>{{record.volume}}</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
+<table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp" style="width: 100%;">
+    <caption class="text-right">
+        <span class="pull-left">
+            <input type="date" class="form-control input-sm" [(ngModel)]="fromDate" (ngModelChange)="load(fromDate)"/>
+        </span>
+         - {{outlay}} / + {{income}}
+    </caption>
+    <thead>
+        <tr>
+            <th class="mdl-data-table__cell--non-numeric">Time</th>
+            <th class="mdl-data-table__cell--non-numeric">Comment</th>
+            <th>Volume</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="#record of history">
+            <td class="mdl-data-table__cell--non-numeric">{{record.createdAt | date:'yyyy/MM/dd HH:mm'}}</td>
+            <td class="mdl-data-table__cell--non-numeric">{{record.comment}}</td>
+            <td>{{record.volume}}</td>
+        </tr>
+    </tbody>
+</table>

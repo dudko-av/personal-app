@@ -54,9 +54,11 @@ export class HistoryService {
         //     }, error => console.log('Could not load todos.'));
     }
 
-    loadAll():Observable<IRecord[]> {
+    loadAll(filter):Observable<IRecord[]> {
+        var headers = new Headers();
+        headers.append('Content-Type', 'application/json');
         return this._http
-            .get('personal/history')
+            .post('personal/history', JSON.stringify(filter), {headers: headers})
             .map(res => res.json())
             .merge(this._socketService.observe('NEW_RECORD'))
             .map(data => {

@@ -11,26 +11,27 @@ System.register(['angular2/core'], function(exports_1, context_1) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
     var core_1;
-    var Datepicker;
+    var DashboardNavComponent;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
             }],
         execute: function() {
-            Datepicker = (function () {
-                function Datepicker() {
+            DashboardNavComponent = (function () {
+                function DashboardNavComponent() {
                 }
-                Datepicker = __decorate([
+                DashboardNavComponent = __decorate([
                     core_1.Component({
-                        selector: 'datepicker'
+                        selector: 'dashboard-nav',
+                        templateUrl: 'app/components/dashboard/dashboard-nav.template.html'
                     }), 
                     __metadata('design:paramtypes', [])
-                ], Datepicker);
-                return Datepicker;
+                ], DashboardNavComponent);
+                return DashboardNavComponent;
             }());
-            exports_1("Datepicker", Datepicker);
+            exports_1("DashboardNavComponent", DashboardNavComponent);
         }
     }
 });
-//# sourceMappingURL=datepicker.directive.js.map
+//# sourceMappingURL=dashboard-nav.component.js.map

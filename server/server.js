@@ -21,6 +21,9 @@ app.use(express.static('client'));
 app.use('/@angular2-material', function (req, res, next) {
     res.sendfile('./client/node_modules' + req.originalUrl);
 });
+app.use('/material-design-lite', function (req, res, next) {
+    res.sendfile('./client/material-design-lite' + req.originalUrl);
+});
 app.use(bodyParser.json());
 app.use(session({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
 app.use(passport_1.Passport.origin.initialize());

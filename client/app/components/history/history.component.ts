@@ -57,6 +57,14 @@ export class HistoryComponent implements OnInit {
                 this.record = new Record();
             });
     }
+
+    // TODO
+    load(fromDate) {
+        this._historyService.loadAll({createdAt: fromDate}).subscribe(data => {
+            this.history = data;
+            this.calculate();
+        });
+    }
 }
 
 class Record {

@@ -7,6 +7,7 @@ import {MD_INPUT_DIRECTIVES} from '@angular2-material/input';
 // custom
 import {HistoryComponent} from './components/history/history.component';
 import {LoginComponent} from './components/login/login.component';
+import {DashboardComponent} from './components/dashboard/dashboard.component';
 
 @Component({
     selector: 'my-app',
@@ -27,10 +28,15 @@ import {LoginComponent} from './components/login/login.component';
         component: LoginComponent
     },
     {
+        path: '/dashboard',
+        name: 'Dashboard',
+        component: DashboardComponent,
+        useAsDefault: true
+    },
+    {
         path: '/history',
         name: 'History',
-        component: HistoryComponent,
-        useAsDefault: true
+        component: HistoryComponent
     }
 ])
 export class AppComponent {}

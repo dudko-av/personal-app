@@ -68,10 +68,12 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/Observable', 'rxjs/Rx',
                     //         this._observerOptions.next(this._dataStore.options);
                     //     }, error => console.log('Could not load todos.'));
                 }
-                HistoryService.prototype.loadAll = function () {
+                HistoryService.prototype.loadAll = function (filter) {
                     var _this = this;
+                    var headers = new http_1.Headers();
+                    headers.append('Content-Type', 'application/json');
                     return this._http
-                        .get('personal/history')
+                        .post('personal/history', JSON.stringify(filter), { headers: headers })
                         .map(function (res) { return res.json(); })
                         .merge(this._socketService.observe('NEW_RECORD'))
                         .map(function (data) {

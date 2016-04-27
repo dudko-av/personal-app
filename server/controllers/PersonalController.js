@@ -26,7 +26,12 @@ var PersonalController = (function () {
     PersonalController.prototype.historyAction = function (req, res) {
         if (!this.authorized(req, res))
             return;
-        PersonalModel_1.PersonalModel.find({ createdBy: req.user._id }, null, { sort: { 'createdAt': 'desc' } }, function (err, list) {
+        var filter = {};
+        filter['createdBy'] = req.user._id;
+        if (req.body.createdAt) {
+            filter['createdAt'] = { $gt: new Date(req.body.createdAt) };
+        }
+        PersonalModel_1.PersonalModel.find(filter, null, { sort: { 'createdAt': 'desc' } }, function (err, list) {
             res.send(list);
         });
     };
