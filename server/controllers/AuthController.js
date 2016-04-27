@@ -4,7 +4,8 @@ var AuthController = (function () {
     function AuthController() {
         this.actions = [
             'facebook',
-            'facebookcallback'
+            'facebookcallback',
+            'user'
         ];
     }
     AuthController.prototype.facebookAction = function (req, res, next) {
@@ -19,7 +20,7 @@ var AuthController = (function () {
                 if (err) {
                     return next(err);
                 }
-                return res.redirect('/users/' + user.username);
+                return res.redirect('/');
             });
         })(req, res, next);
     };
@@ -38,6 +39,9 @@ var AuthController = (function () {
                 return res.redirect('/');
             });
         })(req, res, next);
+    };
+    AuthController.prototype.userAction = function (req, res) {
+        res.send(req.user);
     };
     return AuthController;
 }());

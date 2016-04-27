@@ -21,6 +21,10 @@ System.register(['angular2/core'], function(exports_1, context_1) {
             DashboardHeaderComponent = (function () {
                 function DashboardHeaderComponent() {
                 }
+                __decorate([
+                    core_1.Input(), 
+                    __metadata('design:type', Object)
+                ], DashboardHeaderComponent.prototype, "user", void 0);
                 DashboardHeaderComponent = __decorate([
                     core_1.Component({
                         selector: 'dashboard-header',

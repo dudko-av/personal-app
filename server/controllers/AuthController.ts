@@ -5,7 +5,8 @@ export class AuthController {
     constructor() {
         this.actions = [
             'facebook',
-            'facebookcallback'
+            'facebookcallback',
+            'user'
         ];
     }
 
@@ -15,7 +16,7 @@ export class AuthController {
             if (!user) { return res.redirect('/login'); }
             req.logIn(user, function(err) {
                 if (err) { return next(err); }
-                return res.redirect('/users/' + user.username);
+                return res.redirect('/');
             });
         })(req, res, next);
     }
@@ -29,5 +30,9 @@ export class AuthController {
                 return res.redirect('/');
             });
         })(req, res, next);
+    }
+
+    userAction(req, res) {
+        res.send(req.user);
     }
 }

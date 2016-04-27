@@ -1,4 +1,4 @@
-System.register(['angular2/core', './dashboard-header.component', './dashboard-nav.component', '../history/history.component'], function(exports_1, context_1) {
+System.register(['angular2/core', './dashboard-header.component', './dashboard-nav.component', '../history/history.component', '../../services/auth.service'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(['angular2/core', './dashboard-header.component', './dashboard-n
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, dashboard_header_component_1, dashboard_nav_component_1, history_component_1;
+    var core_1, dashboard_header_component_1, dashboard_nav_component_1, history_component_1, auth_service_1;
     var DashboardComponent;
     return {
         setters:[
@@ -25,12 +25,20 @@ System.register(['angular2/core', './dashboard-header.component', './dashboard-n
             },
             function (history_component_1_1) {
                 history_component_1 = history_component_1_1;
+            },
+            function (auth_service_1_1) {
+                auth_service_1 = auth_service_1_1;
             }],
         execute: function() {
             DashboardComponent = (function () {
-                function DashboardComponent(_elemRef) {
+                function DashboardComponent(_elemRef, _auth) {
                     this._elemRef = _elemRef;
+                    this._auth = _auth;
                 }
+                DashboardComponent.prototype.ngOnInit = function () {
+                    var _this = this;
+                    this._auth.getUser().subscribe(function (user) { return _this.user = user; });
+                };
                 DashboardComponent.prototype.ngAfterViewInit = function () {
                 };
                 DashboardComponent = __decorate([
@@ -41,9 +49,12 @@ System.register(['angular2/core', './dashboard-header.component', './dashboard-n
                             dashboard_header_component_1.DashboardHeaderComponent,
                             dashboard_nav_component_1.DashboardNavComponent,
                             history_component_1.HistoryComponent
+                        ],
+                        providers: [
+                            auth_service_1.AuthService
                         ]
                     }), 
-                    __metadata('design:paramtypes', [core_1.ElementRef])
+                    __metadata('design:paramtypes', [core_1.ElementRef, auth_service_1.AuthService])
                 ], DashboardComponent);
                 return DashboardComponent;
             }());
