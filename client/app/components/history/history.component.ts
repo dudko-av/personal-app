@@ -58,6 +58,10 @@ export class HistoryComponent implements OnInit {
             });
     }
 
+    deleteRecord(record) {
+        this._historyService.deleteRecord(record);
+    }
+
     // TODO
     load(fromDate) {
         this._historyService.loadAll({createdAt: fromDate}).subscribe(data => {

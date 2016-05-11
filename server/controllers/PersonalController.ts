@@ -3,26 +3,17 @@
 import * as express from 'express';
 
 import {PersonalModel} from '../models/PersonalModel';
+import {ACTION} from '../common/decorators';
 
 export class PersonalController {
-    actions = [];
     private _io;
 
     constructor(io) {
         this._io = io;
-
-        this.actions.push('income');
-        this.actions.push('create');
-        this.actions.push('history');
-        this.actions.push('options');
     }
 
-    incomeAction(req:express.Request, res:express.Response) {
-        res.send('income action test');
-    }
-
+    @ACTION({authorized: true})
     createAction(req:express.Request, res:express.Response) {
-        if (!this.authorized(req, res)) return;
         req.body.createdBy = req.user;
         (new PersonalModel(req.body)).save((err, model) => {
             this._io.emit('NEW_RECORD', model);
@@ -30,8 +21,8 @@ export class PersonalController {
         });
     }
 
+    @ACTION({authorized: true})
     historyAction(req:express.Request, res:express.Response) {
-        if (!this.authorized(req, res)) return;
         let filter = {};
         filter['createdBy'] = req.user._id;
         if (req.body.createdAt) {
@@ -42,15 +33,17 @@ export class PersonalController {
         });
     }
 
+    @ACTION({authorized: true})
     optionsAction(req:express.Request, res:express.Response) {
-        if (!this.authorized(req, res)) return;
         PersonalModel.find({createdBy: req.user._id}).distinct('comment', (err, list) => {
             res.send(list);
         });
     }
 
-    private authorized(req, res) {
-        if (!req.user) res.sendStatus(401);
-        return req.user ? true : false;
+    @ACTION({authorized: true})
+    deleteAction(req:express.Request, res:express.Response) {
+        PersonalModel.findByIdAndRemove(req.body.id, (err, result) => {
+            res.send({_id: result.id});
+        });
     }
 }

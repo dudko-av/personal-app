@@ -1,6 +1,6 @@
-<form style="margin-bottom: 15px;">
+<form style="margin-bottom: 15px;" #createForm="ngForm">
     <div>
-        <md-input placeholder="Comment" required [(ngModel)]="record.comment" style="width: 100%;"></md-input>
+        <md-input placeholder="Comment" required [(ngModel)]="record.comment" style="width: 100%;" ngControl="comment"></md-input>
     </div>
     <div style="margin-bottom: 15px;">
         <button *ngFor="#opt of options$ | async"
@@ -10,10 +10,10 @@
                 (click)="record.comment = opt">{{opt}}</button>
     </div>
     <div>
-        <md-input placeholder="Volume" required [(ngModel)]="record.volume" style="width: 100%;"></md-input>
+        <md-input placeholder="Volume" required [(ngModel)]="record.volume" style="width: 100%;" ngControl="volume"></md-input>
     </div>
 
-    <button md-raised-button color="primary" (click)="addRecord(record)">ADD</button>
+    <button md-raised-button color="primary" (click)="addRecord(record)" [disabled]="!createForm.form.valid">ADD</button>
 </form>
 
 <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp" style="width: 100%;">
@@ -28,6 +28,7 @@
             <th class="mdl-data-table__cell--non-numeric">Time</th>
             <th class="mdl-data-table__cell--non-numeric">Comment</th>
             <th>Volume</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -35,6 +36,7 @@
             <td class="mdl-data-table__cell--non-numeric">{{record.createdAt | date:'yyyy/MM/dd HH:mm'}}</td>
             <td class="mdl-data-table__cell--non-numeric">{{record.comment}}</td>
             <td>{{record.volume}}</td>
+            <td (click)="deleteRecord(record)">[X]</td>
         </tr>
     </tbody>
 </table>

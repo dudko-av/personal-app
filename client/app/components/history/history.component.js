@@ -61,6 +61,9 @@ System.register(['angular2/core', 'rxjs/Rx', '@angular2-material/button', '@angu
                         _this.record = new Record();
                     });
                 };
+                HistoryComponent.prototype.deleteRecord = function (record) {
+                    this._historyService.deleteRecord(record);
+                };
                 // TODO
                 HistoryComponent.prototype.load = function (fromDate) {
                     var _this = this;

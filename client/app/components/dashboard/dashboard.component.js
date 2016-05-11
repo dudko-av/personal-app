@@ -1,4 +1,4 @@
-System.register(['angular2/core', './dashboard-header.component', './dashboard-nav.component', '../history/history.component', '../../services/auth.service'], function(exports_1, context_1) {
+System.register(['angular2/core', './dashboard-header.component', './dashboard-nav.component', '../history/history.component', '../../services/auth.service', "angular2/router"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(['angular2/core', './dashboard-header.component', './dashboard-n
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, dashboard_header_component_1, dashboard_nav_component_1, history_component_1, auth_service_1;
+    var core_1, dashboard_header_component_1, dashboard_nav_component_1, history_component_1, auth_service_1, router_1;
     var DashboardComponent;
     return {
         setters:[
@@ -28,6 +28,9 @@ System.register(['angular2/core', './dashboard-header.component', './dashboard-n
             },
             function (auth_service_1_1) {
                 auth_service_1 = auth_service_1_1;
+            },
+            function (router_1_1) {
+                router_1 = router_1_1;
             }],
         execute: function() {
             DashboardComponent = (function () {
@@ -53,6 +56,9 @@ System.register(['angular2/core', './dashboard-header.component', './dashboard-n
                         providers: [
                             auth_service_1.AuthService
                         ]
+                    }),
+                    router_1.CanActivate(function () {
+                        return true;
                     }), 
                     __metadata('design:paramtypes', [core_1.ElementRef, auth_service_1.AuthService])
                 ], DashboardComponent);

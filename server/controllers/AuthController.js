@@ -2,11 +2,6 @@
 var passport = require('passport');
 var AuthController = (function () {
     function AuthController() {
-        this.actions = [
-            'facebook',
-            'facebookcallback',
-            'user'
-        ];
     }
     AuthController.prototype.facebookAction = function (req, res, next) {
         passport.authenticate('facebook', function (err, user, info) {

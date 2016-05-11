@@ -1,13 +1,7 @@
 import * as passport from 'passport';
 
 export class AuthController {
-    actions;
     constructor() {
-        this.actions = [
-            'facebook',
-            'facebookcallback',
-            'user'
-        ];
     }
 
     facebookAction(req, res, next) {

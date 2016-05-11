@@ -33,11 +33,17 @@ fs.readdirSync('server/controllers')
     .filter(function (f) { return !!f.match(/\.js$/); })
     .forEach(function (name) {
     var ctrlName = name.match(/([\w]*)Controller/)[1].toLowerCase();
-    var ctrl = require('./controllers/' + name)[name.split('.')[0]];
-    ctrl = new ctrl(io);
-    ctrl.actions.forEach(function (a) {
-        app.use('/' + ctrlName + '/' + a, function (req, res, next) {
-            ctrl[a + 'Action'](req, res, next);
+    var Controller = require('./controllers/' + name)[name.split('.')[0]];
+    var ctrl = new Controller(io);
+    Object.keys(Controller.prototype)
+        .filter(function (a) {
+        var action = a.match(/([\w]*)Action/); //[1].toLowerCase() == 'action'
+        return action ? !!action[1] : false;
+    })
+        .forEach(function (a) {
+        var action = a.match(/([\w]*)Action/)[1].toLowerCase();
+        app.use('/' + ctrlName + '/' + action, function (req, res, next) {
+            ctrl[a](req, res, next);
         });
     });
 });

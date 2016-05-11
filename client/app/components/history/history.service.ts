@@ -5,6 +5,7 @@ import 'rxjs/Rx';
 import {SocketService} from './../../socket.service';
 import {IRecord} from './../../interfaces/record.interface';
 import {Router} from "angular2/router";
+import {isObject} from "rxjs/util/isObject";
 
 @Injectable()
 export class HistoryService {
@@ -12,6 +13,8 @@ export class HistoryService {
     ioStream$:Observable<any[]>;
     history$:Observable<any[]>;
     options$:Observable<any[]>;
+    private _deleteRecord$:Observable<any[]>;
+    private _deleteRecordObserver;
     private _observer;
     private _ioObserver;
     private _observerOptions;
@@ -29,6 +32,7 @@ export class HistoryService {
         // this.stream$ = new Observable(observer => this._observer = observer).share();
         // this.ioStream$ = new Observable(observer => this._ioObserver = observer).share();
         // this.options$ = new Observable(observer => this._observerOptions = observer).share();
+        this._deleteRecord$ = new Observable(observer => this._deleteRecordObserver = observer);
         //
         // this.history$ = Observable.merge(this.stream$, this._socketService.observe('NEW_RECORD'));
         //
@@ -54,18 +58,27 @@ export class HistoryService {
         //     }, error => console.log('Could not load todos.'));
     }
 
-    loadAll(filter):Observable<IRecord[]> {
+    loadAll(filter?):Observable<IRecord[]> {
         var headers = new Headers();
         headers.append('Content-Type', 'application/json');
         return this._http
             .post('personal/history', JSON.stringify(filter), {headers: headers})
             .map(res => res.json())
             .merge(this._socketService.observe('NEW_RECORD'))
+            .merge(this._deleteRecord$)
             .map(data => {
                 if (Array.isArray(data)) {
                     this._dataCache = data.map(data => new Record(data));
-                } else {
+                } else if (isObject(data)) {
                     this._dataCache.unshift(new Record(data));
+                } else {
+                    let index;
+                    this._dataCache.forEach((v, i) => {
+                        if (v._id === data) {
+                            index = i;
+                        }
+                    });
+                    this._dataCache.splice(index, 1);
                 }
                 return this._dataCache;
             })
@@ -93,6 +106,20 @@ export class HistoryService {
             .post('personal/create', JSON.stringify(record), {headers: headers})
             .map(res => res.json())
             .catch(this.authError.bind(this));
+    }
+
+    deleteRecord(record):boolean {
+        var headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        this._http
+            .post('personal/delete', JSON.stringify({id: record._id}), {headers: headers})
+            .map(res => res.json())
+            .catch(this.authError.bind(this))
+            .subscribe(res => {
+                this._deleteRecordObserver.next(res._id);
+            });
+
+        return true;
     }
 
     private authError(err):Observable<any> {

@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'angular2/http', 'rxjs/Observable', 'rxjs/Rx', './../../socket.service', "angular2/router"], function(exports_1, context_1) {
+System.register(['angular2/core', 'angular2/http', 'rxjs/Observable', 'rxjs/Rx', './../../socket.service', "angular2/router", "rxjs/util/isObject"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/Observable', 'rxjs/Rx',
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, http_1, Observable_1, socket_service_1, router_1;
+    var core_1, http_1, Observable_1, socket_service_1, router_1, isObject_1;
     var HistoryService, Record;
     return {
         setters:[
@@ -29,10 +29,14 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/Observable', 'rxjs/Rx',
             },
             function (router_1_1) {
                 router_1 = router_1_1;
+            },
+            function (isObject_1_1) {
+                isObject_1 = isObject_1_1;
             }],
         execute: function() {
             HistoryService = (function () {
                 function HistoryService(_http, _socketService, _router) {
+                    var _this = this;
                     this._http = _http;
                     this._socketService = _socketService;
                     this._router = _router;
@@ -44,6 +48,7 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/Observable', 'rxjs/Rx',
                     // this.stream$ = new Observable(observer => this._observer = observer).share();
                     // this.ioStream$ = new Observable(observer => this._ioObserver = observer).share();
                     // this.options$ = new Observable(observer => this._observerOptions = observer).share();
+                    this._deleteRecord$ = new Observable_1.Observable(function (observer) { return _this._deleteRecordObserver = observer; });
                     //
                     // this.history$ = Observable.merge(this.stream$, this._socketService.observe('NEW_RECORD'));
                     //
@@ -76,12 +81,22 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/Observable', 'rxjs/Rx',
                         .post('personal/history', JSON.stringify(filter), { headers: headers })
                         .map(function (res) { return res.json(); })
                         .merge(this._socketService.observe('NEW_RECORD'))
+                        .merge(this._deleteRecord$)
                         .map(function (data) {
                         if (Array.isArray(data)) {
                             _this._dataCache = data.map(function (data) { return new Record(data); });
                         }
-                        else {
+                        else if (isObject_1.isObject(data)) {
                             _this._dataCache.unshift(new Record(data));
+                        }
+                        else {
+                            var index_1;
+                            _this._dataCache.forEach(function (v, i) {
+                                if (v._id === data) {
+                                    index_1 = i;
+                                }
+                            });
+                            _this._dataCache.splice(index_1, 1);
                         }
                         return _this._dataCache;
                     })
@@ -106,6 +121,19 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/Observable', 'rxjs/Rx',
                         .post('personal/create', JSON.stringify(record), { headers: headers })
                         .map(function (res) { return res.json(); })
                         .catch(this.authError.bind(this));
+                };
+                HistoryService.prototype.deleteRecord = function (record) {
+                    var _this = this;
+                    var headers = new http_1.Headers();
+                    headers.append('Content-Type', 'application/json');
+                    this._http
+                        .post('personal/delete', JSON.stringify({ id: record._id }), { headers: headers })
+                        .map(function (res) { return res.json(); })
+                        .catch(this.authError.bind(this))
+                        .subscribe(function (res) {
+                        _this._deleteRecordObserver.next(res._id);
+                    });
+                    return true;
                 };
                 HistoryService.prototype.authError = function (err) {
                     if (err.status == 401) {
