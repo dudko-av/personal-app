@@ -1,15 +1,17 @@
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/Rx';
-import {Injectable} from 'angular2/core';
+import {Injectable} from '@angular/core';
 
 @Injectable()
 export class SocketService {
     private _io;
     private _socket;
+    private _namedStorage;
 
     constructor() {
         this._io = io;
         this._socket = this._io.connect();
+        this._namedStorage = this._namedStorage || {};
     }
 
     connect() {
@@ -21,10 +23,13 @@ export class SocketService {
     }
 
     observe(name):Observable<any> {
-        return new Observable(observer => {
-            this._socket.on(name, data => {
-                observer.next(data);
-            });
-        });
+        if (!this._namedStorage[name]) {
+            this._namedStorage[name] = new Observable(observer => {
+                this._socket.on(name, data => {
+                    observer.next(data);
+                });
+            }).share();
+        }
+        return this._namedStorage[name];
     }
 }

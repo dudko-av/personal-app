@@ -1,10 +1,10 @@
-import {Injectable} from 'angular2/core';
-import {Http, Response, Headers} from 'angular2/http';
+import {Injectable} from '@angular/core';
+import {Http, Response, Headers} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/Rx';
 import {SocketService} from './../../socket.service';
 import {IRecord} from './../../interfaces/record.interface';
-import {Router} from "angular2/router";
+import {Router} from "@angular/router";
 import {isObject} from "rxjs/util/isObject";
 
 @Injectable()
@@ -25,37 +25,7 @@ export class HistoryService {
     private _dataCache = [];
 
     constructor(private _http:Http, private _socketService:SocketService, private _router:Router) {
-        // this._dataStore = {
-        //     history: [],
-        //     options: []
-        // };
-        // this.stream$ = new Observable(observer => this._observer = observer).share();
-        // this.ioStream$ = new Observable(observer => this._ioObserver = observer).share();
-        // this.options$ = new Observable(observer => this._observerOptions = observer).share();
         this._deleteRecord$ = new Observable(observer => this._deleteRecordObserver = observer);
-        //
-        // this.history$ = Observable.merge(this.stream$, this._socketService.observe('NEW_RECORD'));
-        //
-        // this._http
-        //     .get('personal/history')
-        //     .map(res => res.json())
-        //     // .catch(this.handleError)
-        //     .subscribe(data => {
-        //         // Update data store
-        //         this._dataStore.history = data;
-        //         // Push the new list of todos into the Observable stream
-        //         this._observer.next(this._dataStore.history);
-        //     }, this.handleError);
-        //
-        // this._http
-        //     .get('personal/options')
-        //     .map(res => res.json())
-        //     .subscribe(data => {
-        //         // Update data store
-        //         this._dataStore.options = data;
-        //         // Push the new list of todos into the Observable stream
-        //         this._observerOptions.next(this._dataStore.options);
-        //     }, error => console.log('Could not load todos.'));
     }
 
     loadAll(filter?):Observable<IRecord[]> {

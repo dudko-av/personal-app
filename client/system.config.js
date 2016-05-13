@@ -1,100 +1,46 @@
-System.config({
-    packages: {
-        app: {
-            format: 'register',
-            defaultExtension: 'js'
-            // map: {
-            //     '@angular2-material/core/annotations/field-value': 'node_modules/@angular2-material/core/annotations/field-value.js',
-            //     '@angular2-material/core': 'node_modules/@angular2-material/core/core.js',
-            //     '@angular2-material/button': 'node_modules/@angular2-material/button/button.js',
-            //     '@angular2-material/input': 'node_modules/@angular2-material/input/input.js'
-            // }
-        },
-        // '@angular2-material/core/annotations/field-value': {
-        //     format: 'cjs',
-        //     defaultExtension: 'js',
-        //     main: 'field-value.js'
-        // },
-        '@angular2-material/core': {
-            format: 'cjs',
-            defaultExtension: 'js',
-            main: 'core.js'
-        },
-        '@angular2-material/button': {
-            format: 'cjs',
-            defaultExtension: 'js',
-            main: 'button.js'
-        },
-        '@angular2-material/input': {
-            format: 'cjs',
-            defaultExtension: 'js',
-            main: 'input.js'
-        }
-    }
-});
-System.import('app/main').then(null, console.error.bind(console));
+(function(global) {
 
-// System.config({
-//     packages: {
-//         app: {
-//             format: 'register',
-//             defaultExtension: 'js'
-//         },
-//         '@angular2-material/core': {
-//             format: 'cjs',
-//             defaultExtension: 'js',
-//             main: 'core.js'
-//         },
-//         '@angular2-material/sidenav': {
-//             format: 'cjs',
-//             defaultExtension: 'js',
-//             main: 'sidenav.js'
-//         },
-//         '@angular2-material/toolbar': {
-//             format: 'cjs',
-//             defaultExtension: 'js',
-//             main: 'toolbar.js'
-//         },
-//         '@angular2-material/card': {
-//             format: 'cjs',
-//             defaultExtension: 'js',
-//             main: 'card.js'
-//         },
-//         '@angular2-material/button': {
-//             format: 'cjs',
-//             defaultExtension: 'js',
-//             main: 'button.js'
-//         },
-//         '@angular2-material/checkbox': {
-//             format: 'cjs',
-//             defaultExtension: 'js',
-//             main: 'checkbox.js'
-//         },
-//         '@angular2-material/radio': {
-//             format: 'cjs',
-//             defaultExtension: 'js',
-//             main: 'radio.js'
-//         },
-//         '@angular2-material/progress-circle': {
-//             format: 'cjs',
-//             defaultExtension: 'js',
-//             main: 'progress-circle.js'
-//         },
-//         '@angular2-material/progress-bar': {
-//             format: 'cjs',
-//             defaultExtension: 'js',
-//             main: 'progress-bar.js'
-//         },
-//         '@angular2-material/input': {
-//             format: 'cjs',
-//             defaultExtension: 'js',
-//             main: 'input.js'
-//         },
-//         '@angular2-material/list': {
-//             format: 'cjs',
-//             defaultExtension: 'js',
-//             main: 'list.js'
-//         },
-//     }
-// });
-// System.import('app.js').then(null, console.error.bind(console));
+    // map tells the System loader where to look for things
+    var map = {
+        'app':                        'app', // 'dist',
+        'rxjs':                       'node_modules/rxjs',
+        'angular2-in-memory-web-api': 'node_modules/angular2-in-memory-web-api',
+        '@angular':                   'node_modules/@angular'
+    };
+
+    // packages tells the System loader how to load when no filename and/or no extension
+    var packages = {
+        'app':                        { main: 'main.js',  defaultExtension: 'js' },
+        'rxjs':                       { defaultExtension: 'js' },
+        'angular2-in-memory-web-api': { defaultExtension: 'js' }
+    };
+
+    var packageNames = [
+        '@angular/common',
+        '@angular/compiler',
+        '@angular/core',
+        '@angular/http',
+        '@angular/platform-browser',
+        '@angular/platform-browser-dynamic',
+        '@angular/router',
+        '@angular/router-deprecated',
+        '@angular/testing',
+        '@angular/upgrade'
+    ];
+
+    // add package entries for angular packages in the form '@angular/common': { main: 'index.js', defaultExtension: 'js' }
+    packageNames.forEach(function(pkgName) {
+        packages[pkgName] = { main: 'index.js', defaultExtension: 'js' };
+    });
+
+    var config = {
+        map: map,
+        packages: packages
+    };
+
+    // filterSystemConfig - index.html's chance to modify config before we register it.
+    if (global.filterSystemConfig) { global.filterSystemConfig(config); }
+
+    System.config(config);
+
+})(this);

@@ -1,9 +1,6 @@
 // angular core
-import {Component} from 'angular2/core';
-import {RouteConfig, ROUTER_DIRECTIVES, ROUTER_PROVIDERS} from 'angular2/router';
-// angular2-material 
-import {MdButton} from '@angular2-material/button';
-import {MD_INPUT_DIRECTIVES} from '@angular2-material/input';
+import {Component} from '@angular/core';
+import {Router, Routes, ROUTER_DIRECTIVES, ROUTER_PROVIDERS} from '@angular/router';
 // custom
 import {HistoryComponent} from './components/history/history.component';
 import {LoginComponent} from './components/login/login.component';
@@ -13,30 +10,30 @@ import {DashboardComponent} from './components/dashboard/dashboard.component';
     selector: 'my-app',
     templateUrl: 'app/app.component.html',
     directives: [
-        ROUTER_DIRECTIVES,
-        MdButton,
-        MD_INPUT_DIRECTIVES
+        ROUTER_DIRECTIVES
+        //MdButton,
+        //MD_INPUT_DIRECTIVES
     ],
     providers: [
         ROUTER_PROVIDERS,
     ]
 })
-@RouteConfig([
+@Routes([
     {
         path: '/login',
-        name: 'Login',
         component: LoginComponent
     },
     {
         path: '/dashboard',
-        name: 'Dashboard',
-        component: DashboardComponent,
-        useAsDefault: true
+        component: DashboardComponent
     },
     {
         path: '/history',
-        name: 'History',
         component: HistoryComponent
     }
 ])
-export class AppComponent {}
+export class AppComponent {
+    constructor(private _router:Router) {
+
+    }
+}

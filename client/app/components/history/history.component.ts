@@ -1,9 +1,5 @@
-import {Component, OnInit} from 'angular2/core';
+import {Component, OnInit} from '@angular/core';
 import 'rxjs/Rx';
-
-// angular2-material
-import {MdButton} from '@angular2-material/button';
-import {MD_INPUT_DIRECTIVES} from '@angular2-material/input';
 
 import {HistoryService} from './history.service';
 import {SocketService} from "../../socket.service";
@@ -12,10 +8,7 @@ import {SocketService} from "../../socket.service";
 @Component({
     selector: 'history-component',
     templateUrl: 'app/components/history/history.template.html',
-    directives: [
-        MdButton,
-        MD_INPUT_DIRECTIVES
-    ],
+    directives: [],
     providers: [
         HistoryService,
         SocketService
