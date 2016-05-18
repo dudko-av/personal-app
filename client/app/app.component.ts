@@ -1,5 +1,5 @@
 // angular core
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Router, Routes, ROUTER_DIRECTIVES, ROUTER_PROVIDERS} from '@angular/router';
 // custom
 import {HistoryComponent} from './components/history/history.component';
@@ -32,8 +32,11 @@ import {DashboardComponent} from './components/dashboard/dashboard.component';
         component: HistoryComponent
     }
 ])
-export class AppComponent {
+export class AppComponent implements OnInit {
     constructor(private _router:Router) {
+    }
 
+    ngOnInit() {
+        this._router.navigateByUrl('/dashboard');
     }
 }

@@ -21,49 +21,40 @@ var HistoryService = (function () {
         this._http = _http;
         this._socketService = _socketService;
         this._router = _router;
-        this._dataCache = [];
-        this._deleteRecord$ = new Observable_1.Observable(function (observer) { return _this._deleteRecordObserver = observer; });
+        this._dataStore = [];
+        this.history$ = new Observable_1.Observable(function (observer) {
+            _this._historyObserver = observer;
+        })
+            .merge(this._socketService.observe('NEW_RECORD'))
+            .map(function (data) {
+            if (Array.isArray(data)) {
+                _this._dataStore = data;
+            }
+            else if (isObject_1.isObject(data)) {
+                _this._dataStore.unshift(new Record(data));
+            }
+            else if (typeof data === 'string') {
+                _this._dataStore.forEach(function (v, i) {
+                    if (v._id === data) {
+                        _this._dataStore.splice(i, 1);
+                    }
+                });
+            }
+            return _this._dataStore;
+        })
+            .share();
     }
-    HistoryService.prototype.loadAll = function (filter) {
+    HistoryService.prototype.load = function (filter) {
         var _this = this;
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
-        return this._http
+        this._http
             .post('personal/history', JSON.stringify(filter), { headers: headers })
-            .map(function (res) { return res.json(); })
-            .merge(this._socketService.observe('NEW_RECORD'))
-            .merge(this._deleteRecord$)
-            .map(function (data) {
-            if (Array.isArray(data)) {
-                _this._dataCache = data.map(function (data) { return new Record(data); });
-            }
-            else if (isObject_1.isObject(data)) {
-                _this._dataCache.unshift(new Record(data));
-            }
-            else {
-                var index_1;
-                _this._dataCache.forEach(function (v, i) {
-                    if (v._id === data) {
-                        index_1 = i;
-                    }
-                });
-                _this._dataCache.splice(index_1, 1);
-            }
-            return _this._dataCache;
-        })
-            .catch(this.authError.bind(this));
-    };
-    HistoryService.prototype.getOptions = function () {
-        return this._http
-            .get('personal/options')
-            .map(function (res) { return res.json(); })
-            .catch(this.authError.bind(this));
-    };
-    HistoryService.prototype.getHistory = function () {
-        return this._http
-            .get('personal/history')
-            .map(function (res) { return res.json(); })
-            .catch(this.authError.bind(this));
+            .map(function (res) { return res.json().map(function (v) { return new Record(v); }); })
+            .catch(this.authError.bind(this))
+            .subscribe(function (history) {
+            _this._historyObserver.next(history);
+        });
     };
     HistoryService.prototype.create = function (record) {
         var headers = new http_1.Headers();
@@ -82,13 +73,24 @@ var HistoryService = (function () {
             .map(function (res) { return res.json(); })
             .catch(this.authError.bind(this))
             .subscribe(function (res) {
-            _this._deleteRecordObserver.next(res._id);
+            _this._historyObserver.next(res._id);
         });
         return true;
     };
+    /**
+     * Fetch option buttons
+     *
+     * @returns {Observable<Record[]>}
+     */
+    HistoryService.prototype.getOptions = function () {
+        return this._http
+            .get('personal/options')
+            .map(function (res) { return res.json(); })
+            .catch(this.authError.bind(this));
+    };
     HistoryService.prototype.authError = function (err) {
         if (err.status == 401) {
-            this._router.navigate(['Login']);
+            this._router.navigateByUrl('/login');
         }
         return Observable_1.Observable.empty();
     };
@@ -102,11 +104,12 @@ exports.HistoryService = HistoryService;
 var Record = (function () {
     function Record(data) {
         var _this = this;
-        Object.keys(data).forEach(function (k) {
-            _this[k] = data[k];
-        });
-        this['createdAt'] = new Date(this['createdAt']);
+        Object.keys(data).forEach(function (k) { return _this[k] = data[k]; });
+        if (data['createdAt']) {
+            this.createdAt = new Date(data['createdAt']);
+        }
     }
     return Record;
 }());
+exports.Record = Record;
 //# sourceMappingURL=history.service.js.map

@@ -23,6 +23,7 @@
             <input type="date" class="form-control input-sm" [(ngModel)]="fromDate" (ngModelChange)="load(fromDate)"/>
         </span>
          - {{outlay}} / + {{income}}
+        <b>{{outlay$ | async}}</b>
     </caption>
     <thead>
         <tr>
@@ -33,7 +34,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let record of history">
+        <tr *ngFor="let record of history$ | async">
             <td class="mdl-data-table__cell--non-numeric">{{record.createdAt | date:'yyyy/MM/dd HH:mm'}}</td>
             <td class="mdl-data-table__cell--non-numeric">{{record.comment}}</td>
             <td>{{record.volume}}</td>

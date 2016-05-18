@@ -19,6 +19,9 @@ var AppComponent = (function () {
     function AppComponent(_router) {
         this._router = _router;
     }
+    AppComponent.prototype.ngOnInit = function () {
+        this._router.navigateByUrl('/dashboard');
+    };
     AppComponent = __decorate([
         core_1.Component({
             selector: 'my-app',

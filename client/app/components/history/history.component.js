@@ -17,29 +17,30 @@ var HistoryComponent = (function () {
         this._historyService = _historyService;
         this.outlay = 0;
         this.income = 0;
-        this.fromDate = new Date(2016, 4, 1);
     }
     HistoryComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.record = new Record();
+        this.record = new history_service_1.Record({ comment: '', volume: '' });
         this.options$ = this._historyService.getOptions();
-        this._historyService.loadAll().subscribe(function (data) {
-            _this.history = data;
-            _this.calculate();
+        this.history$ = this._historyService.history$;
+        this.history$.subscribe(function (history) {
+            var outlay = 0;
+            history.forEach(function (r) { return outlay += r.volume; });
+            _this.outlay = outlay;
         });
-    };
-    HistoryComponent.prototype.calculate = function () {
-        var _this = this;
-        this.outlay = 0;
-        this.income = 0;
-        this.history.forEach(function (r) { return _this.outlay += r.volume; });
+        this.outlay$ = this.history$.map(function (v) {
+            var sum = 0;
+            v.filter(function (r) { return r.type === 0; }).forEach(function (r) { return sum += parseInt(r.volume); });
+            return sum;
+        });
+        this.load();
     };
     HistoryComponent.prototype.addRecord = function (record) {
         var _this = this;
         this._historyService
             .create(record)
-            .subscribe(function (res) {
-            _this.record = new Record();
+            .subscribe(function () {
+            _this.record = new history_service_1.Record({ comment: '', volume: '' });
         });
     };
     HistoryComponent.prototype.deleteRecord = function (record) {
@@ -47,11 +48,7 @@ var HistoryComponent = (function () {
     };
     // TODO
     HistoryComponent.prototype.load = function (fromDate) {
-        var _this = this;
-        this._historyService.loadAll({ createdAt: fromDate }).subscribe(function (data) {
-            _this.history = data;
-            _this.calculate();
-        });
+        this._historyService.load({ createdAt: fromDate });
     };
     HistoryComponent = __decorate([
         core_1.Component({
@@ -68,13 +65,4 @@ var HistoryComponent = (function () {
     return HistoryComponent;
 }());
 exports.HistoryComponent = HistoryComponent;
-var Record = (function () {
-    function Record(comment, volume) {
-        if (comment === void 0) { comment = ''; }
-        if (volume === void 0) { volume = ''; }
-        this.comment = comment;
-        this.volume = volume;
-    }
-    return Record;
-}());
 //# sourceMappingURL=history.component.js.map

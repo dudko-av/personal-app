@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import 'rxjs/Rx';
 
-import {HistoryService} from './history.service';
+import {HistoryService, Record} from './history.service';
 import {SocketService} from "../../socket.service";
-
+import {Observable} from "rxjs/Observable";
 
 @Component({
     selector: 'history-component',
@@ -17,37 +17,37 @@ import {SocketService} from "../../socket.service";
 export class HistoryComponent implements OnInit {
     record:Record;
     options$;
-    history;
-    outlay:number;
-    income:number;
+    history$;
+    outlay = 0;
+    outlay$:Observable<number>;
+    income = 0;
     fromDate: Date;
 
     constructor(private _historyService:HistoryService) {
-        this.outlay = 0;
-        this.income = 0;
-        this.fromDate = new Date(2016, 4, 1);
     }
 
     ngOnInit() {
-        this.record = new Record();
+        this.record = new Record({comment: '', volume: ''});
         this.options$ = this._historyService.getOptions();
-        this._historyService.loadAll().subscribe(data => {
-            this.history = data;
-            this.calculate();
+        this.history$ = this._historyService.history$;
+        this.history$.subscribe(history => {
+            let outlay = 0;
+            history.forEach(r => outlay += r.volume);
+            this.outlay = outlay;
         });
-    }
-
-    private calculate() {
-        this.outlay = 0;
-        this.income = 0;
-        this.history.forEach(r => this.outlay += r.volume);
+        this.outlay$ = this.history$.map((v:Array<Record>) => {
+            let sum = 0;
+            v.filter((r:Record) => r.type === 0).forEach((r:Record) => sum += parseInt(r.volume));
+            return sum;
+        });
+        this.load();
     }
 
     addRecord(record) {
         this._historyService
             .create(record)
-            .subscribe(res => {
-                this.record = new Record();
+            .subscribe(() => {
+                this.record = new Record({comment: '', volume: ''});
             });
     }
 
@@ -56,15 +56,7 @@ export class HistoryComponent implements OnInit {
     }
 
     // TODO
-    load(fromDate) {
-        this._historyService.loadAll({createdAt: fromDate}).subscribe(data => {
-            this.history = data;
-            this.calculate();
-        });
-    }
-}
-
-class Record {
-    constructor(public comment = '', public volume = '') {
+    load(fromDate?) {
+        this._historyService.load({createdAt: fromDate});
     }
 }

@@ -9,73 +9,51 @@ import {isObject} from "rxjs/util/isObject";
 
 @Injectable()
 export class HistoryService {
-    stream$:Observable<IRecord[]>;
-    ioStream$:Observable<any[]>;
-    history$:Observable<any[]>;
-    options$:Observable<any[]>;
-    private _deleteRecord$:Observable<any[]>;
-    private _deleteRecordObserver;
-    private _observer;
-    private _ioObserver;
-    private _observerOptions;
-    private _dataStore: {
-        history: any[],
-        options: any[]
-    };
-    private _dataCache = [];
+    history$:Observable<Record[]>;
+    private _historyObserver;
+    private _dataStore:Record[] = [];
 
     constructor(private _http:Http, private _socketService:SocketService, private _router:Router) {
-        this._deleteRecord$ = new Observable(observer => this._deleteRecordObserver = observer);
-    }
-
-    loadAll(filter?):Observable<IRecord[]> {
-        var headers = new Headers();
-        headers.append('Content-Type', 'application/json');
-        return this._http
-            .post('personal/history', JSON.stringify(filter), {headers: headers})
-            .map(res => res.json())
+        this.history$ = new Observable(observer => {
+                this._historyObserver = observer;
+            })
             .merge(this._socketService.observe('NEW_RECORD'))
-            .merge(this._deleteRecord$)
             .map(data => {
                 if (Array.isArray(data)) {
-                    this._dataCache = data.map(data => new Record(data));
+                    this._dataStore = data;
                 } else if (isObject(data)) {
-                    this._dataCache.unshift(new Record(data));
-                } else {
-                    let index;
-                    this._dataCache.forEach((v, i) => {
+                    this._dataStore.unshift(new Record(data));
+                } else if (typeof data === 'string') {
+                    this._dataStore.forEach((v:Record, i:number) => {
                         if (v._id === data) {
-                            index = i;
+                            this._dataStore.splice(i, 1);
                         }
                     });
-                    this._dataCache.splice(index, 1);
                 }
-                return this._dataCache;
+                return this._dataStore;
             })
-            .catch(this.authError.bind(this));
+            .share();
     }
 
-    getOptions():Observable<any[]> {
-        return this._http
-            .get('personal/options')
-            .map(res => res.json())
-            .catch(this.authError.bind(this));
+    load(filter?) {
+        var headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        this._http
+            .post('personal/history', JSON.stringify(filter), {headers: headers})
+            .map(res => res.json().map(v => new Record(v)))
+            .catch(this.authError.bind(this))
+            .subscribe(history => {
+                this._historyObserver.next(history);
+            });
     }
 
-    getHistory():Observable<any[]> {
-        return this._http
-            .get('personal/history')
-            .map(res => res.json())
-            .catch(this.authError.bind(this));
-    }
-
-    create(record):Observable<any[]> {
+    create(record:Record):Observable<Record> {
         var headers = new Headers();
         headers.append('Content-Type', 'application/json');
         return this._http
             .post('personal/create', JSON.stringify(record), {headers: headers})
             .map(res => res.json())
-            .catch(this.authError.bind(this));
+            .catch<Record>(this.authError.bind(this));
     }
 
     deleteRecord(record):boolean {
@@ -85,26 +63,43 @@ export class HistoryService {
             .post('personal/delete', JSON.stringify({id: record._id}), {headers: headers})
             .map(res => res.json())
             .catch(this.authError.bind(this))
-            .subscribe(res => {
-                this._deleteRecordObserver.next(res._id);
+            .subscribe((res:Record) => {
+                this._historyObserver.next(res._id);
             });
 
         return true;
     }
 
+    /**
+     * Fetch option buttons
+     *
+     * @returns {Observable<Record[]>}
+     */
+    getOptions():Observable<Record[]> {
+        return this._http
+            .get('personal/options')
+            .map(res => res.json())
+            .catch<Record[]>(this.authError.bind(this));
+    }
+
     private authError(err):Observable<any> {
         if (err.status == 401) {
-            this._router.navigate(['Login']);
+            this._router.navigateByUrl('/login');
         }
         return Observable.empty();
     }
 }
 
-class Record {
-    constructor(data) {
-        Object.keys(data).forEach(k => {
-            this[k] = data[k];
-        });
-        this['createdAt'] = new Date(this['createdAt']);
+export class Record {
+    _id:string; // "5735d38d02f77d5421e79db0"
+    comment:string; // "qwe"
+    createdAt:Date; // "2016-05-13T13:15:57.475Z"
+    createdBy:Object; // {_id: "571e1fa8048e8fb014b424b4", displayName: "Alexander Dudko", provider: "facebook",…}
+    type:number; //0
+    volume:string; // 33
+
+    constructor(data:Object) {
+        Object.keys(data).forEach(k => this[k] = data[k]);
+        if (data['createdAt']) { this.createdAt = new Date(data['createdAt']); }
     }
 }
