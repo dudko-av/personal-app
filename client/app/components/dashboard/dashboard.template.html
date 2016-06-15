@@ -28,8 +28,19 @@
     </div>
     <main class="mdl-layout__content mdl-color--grey-100">
         <div class="mdl-grid demo-content">
-            <div class="demo-charts mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-grid">
-                <history-component style="width: 100%"></history-component>
+            <div class="demo-charts mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--8-col mdl-grid" [ngClass]="setClass('history')">
+                <history-component style="width: 100%" (rowClick)="showDetails($event)"></history-component>
+            </div>
+
+            <div class="mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--4-col mdl-grid">
+                <form *ngIf="record">
+                    <div>
+                        <input [(ngModel)]="record.comment" #test>
+                    </div>
+                    <div>
+                        <input [(ngModel)]="record.volume">
+                    </div>
+                </form>
             </div>
 
             <div class="demo-charts mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-grid">

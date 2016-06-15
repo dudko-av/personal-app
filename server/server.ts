@@ -12,6 +12,7 @@ import * as session from 'express-session';
 import {config} from './config/config';
 import {DB} from './config/mongoose';
 import {Passport} from './config/passport';
+import Response = Express.Response;
 
 var app = express();
 var server = http.Server(app);
@@ -53,7 +54,8 @@ fs.readdirSync('server/controllers')
     });
 
 // not found
-app.use(function (req, res, next) {
+app.use(function (req, res: Response, next) {
+    res.status(404);
     res.sendfile('./client/index.html');
 });
 

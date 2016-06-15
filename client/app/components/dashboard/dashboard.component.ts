@@ -1,13 +1,19 @@
-import {Component, OnInit, AfterViewInit, ElementRef} from '@angular/core';
-import {DashboardHeaderComponent} from './dashboard-header.component';
-import {DashboardNavComponent} from './dashboard-nav.component';
-import {HistoryComponent} from '../history/history.component'
-import {AuthService} from '../../services/auth.service';
+import { Component, OnInit } from '@angular/core';
+import { MD_INPUT_DIRECTIVES } from '@angular2-material/input';
+import { MD_BUTTON_DIRECTIVES } from '@angular2-material/button';
+
+import { DashboardHeaderComponent } from './dashboard-header.component';
+import { DashboardNavComponent } from './dashboard-nav.component';
+import { HistoryComponent } from '../history/history.component'
+import { AuthService } from '../../services/auth.service';
 
 @Component({
+    moduleId: module.id,
     selector: 'dashboard',
-    templateUrl: 'app/components/dashboard/dashboard.template.html',
+    templateUrl: 'dashboard.template.html',
     directives: [
+        MD_INPUT_DIRECTIVES,
+        MD_BUTTON_DIRECTIVES,
         DashboardHeaderComponent,
         DashboardNavComponent,
         HistoryComponent
@@ -16,15 +22,28 @@ import {AuthService} from '../../services/auth.service';
         AuthService
     ]
 })
-export class DashboardComponent implements OnInit, AfterViewInit {
+export class DashboardComponent implements OnInit {
     user;
-    constructor(private _elemRef:ElementRef, private _auth:AuthService) {
+    record;
+    
+    constructor(private _auth:AuthService) {
     }
     
     ngOnInit() {
         this._auth.getUser().subscribe(user => this.user = user);
    }
 
-    ngAfterViewInit() {
+    showDetails(record) {
+        this.record = record;
     }
-}
+
+    setClass(cmpName:string) {
+        let cssClass = {};
+        switch (cmpName) {
+            case 'history':
+                cssClass['mdl-cell--8-col'] = !!this.record;
+                cssClass['mdl-cell--12-col'] = !this.record;
+        }
+        return cssClass;
+    }
+ }

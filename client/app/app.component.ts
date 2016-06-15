@@ -1,18 +1,16 @@
 // angular core
-import {Component, OnInit} from '@angular/core';
-import {Router, Routes, ROUTER_DIRECTIVES, ROUTER_PROVIDERS} from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Router, Routes, ROUTER_DIRECTIVES, ROUTER_PROVIDERS } from '@angular/router';
 // custom
-import {HistoryComponent} from './components/history/history.component';
-import {LoginComponent} from './components/login/login.component';
-import {DashboardComponent} from './components/dashboard/dashboard.component';
+import { HistoryComponent } from './components/history/history.component';
+import { LoginComponent } from './components/login/login.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 @Component({
     selector: 'my-app',
     templateUrl: 'app/app.component.html',
     directives: [
         ROUTER_DIRECTIVES
-        //MdButton,
-        //MD_INPUT_DIRECTIVES
     ],
     providers: [
         ROUTER_PROVIDERS,

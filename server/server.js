@@ -49,6 +49,7 @@ fs.readdirSync('server/controllers')
 });
 // not found
 app.use(function (req, res, next) {
+    res.status(404);
     res.sendfile('./client/index.html');
 });
 // logs
