@@ -5,7 +5,8 @@
         'app':                        'app', // 'dist',
         'rxjs':                       'node_modules/rxjs',
         'angular2-in-memory-web-api': 'node_modules/angular2-in-memory-web-api',
-        '@angular':                   'node_modules/@angular'
+        '@angular':                   'node_modules/@angular',
+        '@angular2-material':         'node_modules/@angular2-material'
     };
 
     // packages tells the System loader how to load when no filename and/or no extension
@@ -27,6 +28,19 @@
         '@angular/testing',
         '@angular/upgrade'
     ];
+
+    var materialPkgs = [
+        'core',
+        'button',
+        'card',
+        'toolbar',
+        'sidenav',
+        'icon',
+        'list',
+        'grid-list'
+    ].forEach(function (pkg) {
+        packages['@angular2-material/' + pkg] = { main: pkg + '.js', defaultExtension: 'js' };
+    });
 
     // add package entries for angular packages in the form '@angular/common': { main: 'index.js', defaultExtension: 'js' }
     packageNames.forEach(function(pkgName) {

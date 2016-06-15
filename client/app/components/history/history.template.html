@@ -6,6 +6,7 @@
     <div style="margin-bottom: 15px;">
         <button *ngFor="let opt of options$ | async"
                 type="button"
+                md-raised-button
                 style="margin-bottom: 7px; margin-right: 7px;"
                 class="btn btn-default btn-sm"
                 (click)="record.comment = opt">{{opt}}</button>

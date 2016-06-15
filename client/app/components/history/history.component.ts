@@ -6,8 +6,9 @@ import {SocketService} from "../../socket.service";
 import {Observable} from "rxjs/Observable";
 
 @Component({
+    moduleId: module.id,
     selector: 'history-component',
-    templateUrl: 'app/components/history/history.template.html',
+    templateUrl: 'history.template.html',
     directives: [],
     providers: [
         HistoryService,

@@ -52,8 +52,9 @@ var HistoryComponent = (function () {
     };
     HistoryComponent = __decorate([
         core_1.Component({
+            moduleId: module.id,
             selector: 'history-component',
-            templateUrl: 'app/components/history/history.template.html',
+            templateUrl: 'history.template.html',
             directives: [],
             providers: [
                 history_service_1.HistoryService,
