@@ -10,18 +10,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 require('rxjs/Rx');
-var input_1 = require('@angular2-material/input');
-var button_1 = require('@angular2-material/button');
 var history_service_1 = require('./history.service');
 var socket_service_1 = require("../../socket.service");
-var core_2 = require("@angular/core");
 var HistoryComponent = (function () {
-    function HistoryComponent(_historyService, _cd) {
+    function HistoryComponent(_historyService) {
         this._historyService = _historyService;
-        this._cd = _cd;
         this.outlay = 0;
         this.income = 0;
-        this.rowClick = new core_2.EventEmitter();
     }
     HistoryComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -55,27 +50,18 @@ var HistoryComponent = (function () {
     HistoryComponent.prototype.load = function (fromDate) {
         this._historyService.load({ createdAt: fromDate });
     };
-    HistoryComponent.prototype.onRowClick = function (record) {
-        this.rowClick.emit(record);
-    };
-    __decorate([
-        core_2.Output(), 
-        __metadata('design:type', Object)
-    ], HistoryComponent.prototype, "rowClick", void 0);
     HistoryComponent = __decorate([
         core_1.Component({
+            moduleId: module.id,
             selector: 'history-component',
-            templateUrl: 'app/components/history/history.template.html',
-            directives: [
-                input_1.MD_INPUT_DIRECTIVES,
-                button_1.MD_BUTTON_DIRECTIVES
-            ],
+            templateUrl: 'history.template.html',
+            directives: [],
             providers: [
                 history_service_1.HistoryService,
                 socket_service_1.SocketService
             ]
         }), 
-        __metadata('design:paramtypes', [history_service_1.HistoryService, core_1.ChangeDetectorRef])
+        __metadata('design:paramtypes', [history_service_1.HistoryService])
     ], HistoryComponent);
     return HistoryComponent;
 }());

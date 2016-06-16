@@ -1,20 +1,15 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import 'rxjs/Rx';
-import { MD_INPUT_DIRECTIVES } from '@angular2-material/input';
-import { MD_BUTTON_DIRECTIVES } from '@angular2-material/button';
 
-import { HistoryService, Record } from './history.service';
-import { SocketService } from "../../socket.service";
-import { Observable } from "rxjs/Observable";
-import { EventEmitter, Output } from "@angular/core";
+import {HistoryService, Record} from './history.service';
+import {SocketService} from "../../socket.service";
+import {Observable} from "rxjs/Observable";
 
 @Component({
+    moduleId: module.id,
     selector: 'history-component',
-    templateUrl: 'app/components/history/history.template.html',
-    directives: [
-        MD_INPUT_DIRECTIVES,
-        MD_BUTTON_DIRECTIVES
-    ],
+    templateUrl: 'history.template.html',
+    directives: [],
     providers: [
         HistoryService,
         SocketService
@@ -28,9 +23,8 @@ export class HistoryComponent implements OnInit {
     outlay$:Observable<number>;
     income = 0;
     fromDate: Date;
-    @Output() rowClick = new EventEmitter();
 
-    constructor(private _historyService:HistoryService, private _cd:ChangeDetectorRef) {
+    constructor(private _historyService:HistoryService) {
     }
 
     ngOnInit() {
@@ -65,9 +59,5 @@ export class HistoryComponent implements OnInit {
     // TODO
     load(fromDate?) {
         this._historyService.load({createdAt: fromDate});
-    }
-
-    onRowClick(record:Record) {
-        this.rowClick.emit(record);
     }
 }

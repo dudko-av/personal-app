@@ -1,0 +1,25 @@
+.content {
+    margin-left: 240px;
+}
+
+@media screen and (max-width: 1024px) {
+    .content {
+        margin-left: 0;
+    }
+}
+
+@media screen and (min-width: 1025px) {
+    md-sidenav-layout > md-sidenav {
+        background-color: #00acc1;
+        transform: translate3d(0, 0, 0);
+        visibility: visible;
+    }
+}
+
+md-sidenav {
+    width: 240px;
+}
+
+.mdl-grid {
+    max-width: 1080px;
+}
