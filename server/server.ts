@@ -12,7 +12,6 @@ import * as session from 'express-session';
 import {config} from './config/config';
 import {DB} from './config/mongoose';
 import {Passport} from './config/passport';
-import Response = Express.Response;
 
 var app = express();
 var server = http.Server(app);
@@ -22,12 +21,6 @@ var passport = new Passport();
 var db = new DB();
 // configure app
 app.use(express.static('client'));
-app.use('/@angular2-material', function (req, res, next) {
-    res.sendfile('./client/node_modules' + req.originalUrl);
-});
-app.use('/material-design-lite', function (req, res, next) {
-    res.sendfile('./client/material-design-lite' + req.originalUrl);
-});
 app.use(bodyParser.json());
 app.use(session({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
 app.use(Passport.origin.initialize());
@@ -54,7 +47,7 @@ fs.readdirSync('server/controllers')
     });
 
 // not found
-app.use(function (req, res: Response, next) {
+app.use(function (req, res, next) {
     res.status(404);
     res.sendfile('./client/index.html');
 });

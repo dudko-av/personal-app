@@ -29,6 +29,19 @@
         '@angular/upgrade'
     ];
 
+    var materialPkgs = [
+        'core',
+        'button',
+        'card',
+        'toolbar',
+        'sidenav',
+        'icon',
+        'list',
+        'grid-list'
+    ].forEach(function (pkg) {
+        packages['@angular2-material/' + pkg] = { main: pkg + '.js', defaultExtension: 'js' };
+    });
+
     // add package entries for angular packages in the form '@angular/common': { main: 'index.js', defaultExtension: 'js' }
     packageNames.forEach(function(pkgName) {
         packages[pkgName] = { main: 'index.js', defaultExtension: 'js' };
